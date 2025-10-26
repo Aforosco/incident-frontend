@@ -30,15 +30,26 @@
         >
           Login
         </button>
+<<<<<<< HEAD
 
         <p v-if="error" class="text-red-600 text-center mt-2">{{ error }}</p>
       </form>
+=======
+          <p class="mt-4 text-center text-sm text-gray-600">
+        create an account?
+        <router-link to="/register" class="text-blue-600 hover:underline">Sign-Up</router-link>
+      </p>
+        <p v-if="error" class="text-red-600 text-center mt-2">{{ error }}</p>
+      </form>
+      
+>>>>>>> email-feature
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
+<<<<<<< HEAD
 import { useRouter } from "vue-router";
 import { login } from "../services/login";
 
@@ -50,11 +61,19 @@ interface Form {
 
 const form = ref<Form>({ email: "", password: "" });
 const error = ref<string>("");
+=======
+import { login } from "../services/login";
+import { useRouter } from "vue-router";
+
+const form = ref({ email: "", password: "" });
+const error = ref("");
+>>>>>>> email-feature
 const router = useRouter();
 
 const handleLogin = async () => {
   try {
     error.value = "";
+<<<<<<< HEAD
     await login(form.value.email, form.value.password);
     // Redirect to dashboard
     router.push("/dashboard");
@@ -64,3 +83,17 @@ const handleLogin = async () => {
   }
 };
 </script>
+=======
+    const response = await login(form.value.email, form.value.password);
+    
+    if (response.role === "Admin") {
+      router.push("/admin-dashboard");
+    } else {
+      router.push("/user-dashboard");
+    }
+  } catch (err) {
+    error.value = "Invalid credentials";
+  }
+};
+</script>
+>>>>>>> email-feature

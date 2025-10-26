@@ -9,6 +9,12 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src')
     }
   },
+<<<<<<< HEAD
+=======
+  css: {
+    postcss: './postcss.config.cjs'
+  },
+>>>>>>> email-feature
   server: {
     port: 5173,
     headers: {

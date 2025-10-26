@@ -9,6 +9,10 @@ export interface Incident {
   status: 'New' | 'Investigating' | 'Resolved' | 'Closed';
   location?: string;
   createdAt: string;
+<<<<<<< HEAD
+=======
+  createdBy:string;
+>>>>>>> email-feature
   dueDate?: string;
   assignedTo?: string;
   resolutionNotes?: string;

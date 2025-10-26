@@ -12,15 +12,26 @@
     "axios": "^1.12.2",
     "i": "^0.3.7",
     "vue": "^3.5.22",
+<<<<<<< HEAD
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+=======
+    "vue-router": "^4.5.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.16",
+>>>>>>> email-feature
     "@types/node": "^24.6.0",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/tsconfig": "^0.8.1",
     "autoprefixer": "^10.4.21",
+<<<<<<< HEAD
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.14",
+=======
+>>>>>>> email-feature
     "typescript": "~5.9.3",
     "vite": "^7.1.7",
     "vue-tsc": "^3.1.0"

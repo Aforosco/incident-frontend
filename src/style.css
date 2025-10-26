@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+=======
+@import "tailwindcss";
+
+@source "../src/**/*.{vue,js,ts,jsx,tsx}";
+>>>>>>> email-feature
