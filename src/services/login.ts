@@ -1,16 +1,20 @@
-
-
+// src/services/login.ts
 
 interface LoginResponse {
   token: string;
-  user?: any;
+  role: string;
+  email: string;
+  fullName?: string;
 }
-export const login = async (email: string, password: string) => {
+
+export const login = async (email: string, password: string): Promise<LoginResponse> => {
   try {
     const res = await fetch("https://localhost:7094/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ 
+        Email: email,    
+        Password: password }),
     });
 
     if (!res.ok) {
@@ -20,12 +24,12 @@ export const login = async (email: string, password: string) => {
 
     const data: LoginResponse = await res.json();
     
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-      
-      if (data.user) {
-        localStorage.setItem("user", JSON.stringify(data.user));
-      }
+    // Store token and user info
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("role", data.role);
+    localStorage.setItem("email", data.email);
+    if (data.fullName) {
+      localStorage.setItem("fullName", data.fullName);
     }
     
     return data;
@@ -37,7 +41,9 @@ export const login = async (email: string, password: string) => {
 
 export const logout = () => {
   localStorage.removeItem("token");
-  localStorage.removeItem("user");
+  localStorage.removeItem("role");
+  localStorage.removeItem("email");
+  localStorage.removeItem("fullName");
 };
 
 export const isAuthenticated = (): boolean => {
@@ -46,4 +52,12 @@ export const isAuthenticated = (): boolean => {
 
 export const getToken = (): string | null => {
   return localStorage.getItem("token");
+};
+
+export const getRole = (): string | null => {
+  return localStorage.getItem("role");
+};
+
+export const isAdmin = (): boolean => {
+  return getRole() === "Admin";
 };

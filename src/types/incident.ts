@@ -9,6 +9,7 @@ export interface Incident {
   status: 'New' | 'Investigating' | 'Resolved' | 'Closed';
   location?: string;
   createdAt: string;
+  createdBy:string;
   dueDate?: string;
   assignedTo?: string;
   resolutionNotes?: string;

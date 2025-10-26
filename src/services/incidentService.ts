@@ -1,5 +1,5 @@
 // src/services/incidentService.ts
-import type { Incident } from '../types/incident';
+import type { Incident, PaginatedIncidents } from '../types/incident';
 
 const API_BASE = 'https://localhost:7094/api/incidents';
 
@@ -11,78 +11,68 @@ const getAuthHeaders = () => {
   };
 };
 
-// src/services/incidentService.ts
-export const getAllIncidents = async () => {
-  const token = localStorage.getItem("token");
-  const response = await fetch(API_BASE, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch incidents: ${response.status}`);
-  }
-
-  const data = await response.json();
-  // Ensure data is always an array
-  return Array.isArray(data) ? data : [];
-};
-
-
-export const getIncident = async (id: number): Promise<Incident> => {
-  const res = await fetch(`${API_BASE}/${id}`, {
-    headers: getAuthHeaders(),
-  });
-  if (!res.ok) throw new Error('Failed to fetch incident');
-  return await res.json() as Incident;
-};
-
-export const createIncident = async (incident: Partial<Incident>): Promise<Incident> => {
+export const getAllIncidents = async (page: number = 1): Promise<PaginatedIncidents> => {
   try {
-    console.log('Creating incident with data:', incident);
-    console.log('Headers:', getAuthHeaders());
-    
-    const res = await fetch(API_BASE, {
-      method: 'POST',
+    const res = await fetch(`${API_BASE}?page=${page}`, {
       headers: getAuthHeaders(),
-      body: JSON.stringify(incident)
     });
-    
     if (!res.ok) {
       const errorText = await res.text();
-      console.error('API Error Response:', errorText);
-      console.error('Status Code:', res.status);
-      throw new Error(`Failed to create incident: ${res.status} - ${errorText}`);
+      console.error('API Error:', errorText);
+      throw new Error(`Failed to fetch incidents: ${res.status}`);
     }
     
-    const data = await res.json();
-    console.log('Incident created successfully:', data);
-    return data as Incident;
+    return await res.json() as PaginatedIncidents;
   } catch (error) {
-    console.error('Create incident error:', error);
+    console.error('Fetch error:', error);
     throw error;
   }
 };
 
-export const updateIncident = async (id: number, incident: Partial<Incident>): Promise<Incident> => {
-  const res = await fetch(`${API_BASE}/${id}`, {
-    method: 'PUT',
+// ... rest of your service methods
+// ✅ Create a new incident (requires auth)
+export const createIncident = async (incident: Partial<Incident>): Promise<Incident> => {
+  const res = await fetch(API_BASE, {
+    method: 'POST',
     headers: getAuthHeaders(),
-    body: JSON.stringify(incident)
+    body: JSON.stringify(incident),
   });
-  if (!res.ok) throw new Error('Failed to update incident');
+  if (!res.ok) throw new Error('Failed to create incident');
   return await res.json() as Incident;
 };
 
+
+// In incidentService.ts
+
+export const updateIncident = async (id: number, incident: any) => {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${API_BASE}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(incident),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update incident");
+  }
+
+  // Backend returns 204 No Content, so don't try to parse JSON
+  // Just return a success indicator or the incident data passed in
+  return { success: true };
+};
+
+
 export const deleteIncident = async (id: number) => {
-  const res = await fetch(`${API_BASE}/${id}`, { 
+  const res = await fetch(`${API_BASE}/${id}`, {
     method: 'DELETE',
     headers: getAuthHeaders(),
   });
   if (!res.ok) throw new Error('Failed to delete incident');
 };
+
 
 export const getStats = async () => {
   const res = await fetch(`${API_BASE}/stats`, {
